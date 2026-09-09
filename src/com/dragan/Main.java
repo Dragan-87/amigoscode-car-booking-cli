@@ -1,3 +1,10 @@
 void main() {
-    System.out.println("Car Booking CLI");
+
+    boolean isExit = false;
+
+    while (!isExit) {
+        System.out.println("""
+                
+                """);
+    }
 }
