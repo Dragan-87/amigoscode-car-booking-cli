@@ -1,7 +1,5 @@
 package com.dragan.booking;
 
-
-import com.dragan.car.Car;
 import com.dragan.exceptions.EntityNotFoundException;
 
 import java.util.Objects;
@@ -45,4 +43,6 @@ public class CarBookingDao {
         return userBookings;
 
     }
+
+
 }

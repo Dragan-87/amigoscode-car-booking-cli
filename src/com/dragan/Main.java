@@ -1,13 +1,15 @@
+import com.dragan.booking.CarBooking;
 import com.dragan.booking.CarBookingDao;
+import com.dragan.booking.CarBookingService;
+import com.dragan.car.Car;
+import com.dragan.car.CarService;
 import com.dragan.user.User;
-import com.dragan.user.UserDao;
 import com.dragan.user.UserService;
 
 void main() {
-
-    UserDao userDao = new UserDao();
-    UserService userService = new UserService(userDao);
-    CarBookingDao carBookingDao = new CarBookingDao();
+    UserService userService = new UserService();
+    CarService carService = new CarService();
+    CarBookingService carBookingService = new CarBookingService();
 
     boolean isRunning = true;
     Scanner scanner = new Scanner(System.in);
@@ -32,7 +34,7 @@ void main() {
                 case 3 -> System.out.println("Option 3 wurde gewählt.");
                 case 4 -> System.out.println("Option 4 wurde gewählt.");
                 case 5 -> System.out.println("Option 5 wurde gewählt.");
-                case 6 -> System.out.println(Arrays.toString(carBookingDao.findAll()));
+                case 6 -> System.out.println(Arrays.toString(carBookingService.findAll()));
                 case 7 -> printAllUsers(userService);
                 case 8 -> isRunning = false;
                 default -> System.out.println("Input invalid, pleas try again or exit!");
@@ -45,7 +47,7 @@ void main() {
 }
 
 public void printAllUsers(UserService userService) {
-    User[] users = userService.getAllUsers();
+    User[] users = userService.findAll();
     if (users == null) {
         System.out.println("No users found.");
         return;
@@ -53,5 +55,16 @@ public void printAllUsers(UserService userService) {
 
     for (User user : users) {
         System.out.println(user);
+    }
+}
+
+public void printAllUserBookings(CarBookingService carBookingService, UUID userId) {
+    CarBooking[] userBookings = carBookingService.findAllBookingsByUserId(userId);
+    if (userBookings == null) {
+        System.out.println("No bookings found.");
+        return;
+    }
+    for (CarBooking bookings : userBookings) {
+        System.out.println(bookings);
     }
 }

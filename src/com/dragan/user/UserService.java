@@ -1,13 +1,9 @@
 package com.dragan.user;
 
 public class UserService {
-    private final UserDao userDao;
+    private UserDao userDao = new UserDao() ;
 
-    public UserService(UserDao userDao) {
-        this.userDao = userDao;
-    }
-
-    public User[] getAllUsers() {
+    public User[] findAll() {
         return userDao.findAll();
     }
 }
