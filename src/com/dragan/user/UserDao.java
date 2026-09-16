@@ -1,5 +1,8 @@
 package com.dragan.user;
 
+import com.dragan.exceptions.EntityNotFoundException;
+
+import java.util.Objects;
 import java.util.UUID;
 
 
@@ -13,7 +16,17 @@ public class UserDao {
         };
     }
 
-    public User[] getAllUser() {
+    public User[] findAll() {
         return users;
     }
+
+    public User findById(UUID uuid) throws EntityNotFoundException {
+        for (User user : users) {
+            if (user != null && Objects.equals(uuid, user.getId())) {
+                return user;
+            }
+        }
+        throw new EntityNotFoundException("User", uuid);
+    }
+
 }
