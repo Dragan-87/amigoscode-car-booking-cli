@@ -1,7 +1,5 @@
 import com.dragan.booking.CarBooking;
-import com.dragan.booking.CarBookingDao;
 import com.dragan.booking.CarBookingService;
-import com.dragan.car.Car;
 import com.dragan.car.CarService;
 import com.dragan.user.User;
 import com.dragan.user.UserService;
@@ -28,10 +26,11 @@ void main() {
                 """);
         try {
             option = scanner.nextInt();
+            scanner.nextLine();
             switch (option) {
                 case 1 -> System.out.println("Option 1 wurde gewählt.");
                 case 2 -> System.out.println("Option 2 wurde gewählt.");
-                case 3 -> System.out.println("Option 3 wurde gewählt.");
+                case 3 -> printAllUserBookedCars(carBookingService, scanner);
                 case 4 -> System.out.println("Option 4 wurde gewählt.");
                 case 5 -> System.out.println("Option 5 wurde gewählt.");
                 case 6 -> System.out.println(Arrays.toString(carBookingService.findAll()));
@@ -60,11 +59,37 @@ public void printAllUsers(UserService userService) {
 
 public void printAllUserBookings(CarBookingService carBookingService, UUID userId) {
     CarBooking[] userBookings = carBookingService.findAllBookingsByUserId(userId);
-    if (userBookings == null) {
+    if (userBookings == null || userBookings.length == 0) {
         System.out.println("No bookings found.");
         return;
     }
     for (CarBooking bookings : userBookings) {
         System.out.println(bookings);
+    }
+}
+
+public void printAllUserBookedCars(CarBookingService carBookingService, Scanner scanner) {
+    CarBooking[] carBookings = carBookingService.findAllBookingsByUserId(validateUserUuidInput(scanner));
+    if (carBookings == null || carBookings.length == 0) {
+        System.out.println("No bookings found.");
+        return;
+    }
+    System.out.println(carBookings.length);
+    for (CarBooking booking : carBookings) {
+        if (booking != null) {
+            System.out.println(booking.getCar());
+        }
+    }
+
+}
+
+public UUID validateUserUuidInput(Scanner scanner) {
+    while (true) {
+        try {
+            System.out.print("Please enter a user id: ");
+            return UUID.fromString(scanner.nextLine());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Input is not a valid UUID, please try again");
+        }
     }
 }

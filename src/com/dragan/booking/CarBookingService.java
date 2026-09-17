@@ -12,4 +12,8 @@ public class CarBookingService {
     public CarBooking[] findAll() {
         return carBookingDao.findAll();
     }
+
+    public CarBooking[] findAllByUserID(UUID uuid) {
+        return carBookingDao.findAllBookingsByUserId(uuid);
+    }
 }

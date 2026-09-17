@@ -12,4 +12,5 @@ public class CarService {
     public Car findCarById(UUID uuid) {
         return carDao.findById(uuid);
     }
+
 }
