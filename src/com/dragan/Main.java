@@ -1,7 +1,6 @@
 import com.dragan.booking.CarBooking;
 import com.dragan.booking.CarBookingService;
 import com.dragan.car.Car;
-import com.dragan.car.CarService;
 import com.dragan.exceptions.EntityNotFoundException;
 import com.dragan.user.User;
 import com.dragan.user.UserService;

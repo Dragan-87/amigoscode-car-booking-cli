@@ -1,6 +1,5 @@
 package com.dragan.car;
 
-import com.dragan.booking.CarBooking;
 import com.dragan.exceptions.EntityNotFoundException;
 
 import java.math.BigDecimal;
