@@ -1,5 +1,6 @@
 import com.dragan.booking.CarBooking;
 import com.dragan.booking.CarBookingService;
+import com.dragan.car.Car;
 import com.dragan.car.CarService;
 import com.dragan.user.User;
 import com.dragan.user.UserService;
@@ -31,9 +32,9 @@ void main() {
                 case 1 -> System.out.println("Option 1 wurde gewählt.");
                 case 2 -> System.out.println("Option 2 wurde gewählt.");
                 case 3 -> printAllUserBookedCars(carBookingService, scanner);
-                case 4 -> System.out.println("Option 4 wurde gewählt.");
-                case 5 -> System.out.println("Option 5 wurde gewählt.");
-                case 6 -> System.out.println(Arrays.toString(carBookingService.findAll()));
+                case 4 -> System.out.println(Arrays.toString(carBookingService.findAll()));
+                case 5 -> printCars(carBookingService.getAvailableCars());
+                case 6 -> System.out.println("Option 6");
                 case 7 -> printAllUsers(userService);
                 case 8 -> isRunning = false;
                 default -> System.out.println("Input invalid, pleas try again or exit!");
@@ -54,17 +55,6 @@ public void printAllUsers(UserService userService) {
 
     for (User user : users) {
         System.out.println(user);
-    }
-}
-
-public void printAllUserBookings(CarBookingService carBookingService, UUID userId) {
-    CarBooking[] userBookings = carBookingService.findAllBookingsByUserId(userId);
-    if (userBookings == null || userBookings.length == 0) {
-        System.out.println("No bookings found.");
-        return;
-    }
-    for (CarBooking bookings : userBookings) {
-        System.out.println(bookings);
     }
 }
 
@@ -91,5 +81,16 @@ public UUID validateUserUuidInput(Scanner scanner) {
         } catch (IllegalArgumentException e) {
             System.out.println("Input is not a valid UUID, please try again");
         }
+    }
+}
+
+public void printCars(Car[] cars) {
+    if (cars == null || cars.length == 0) {
+        System.out.println("No cars found");
+        return;
+    }
+
+    for (Car car : cars) {
+        System.out.println(car);
     }
 }

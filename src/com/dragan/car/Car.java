@@ -60,4 +60,15 @@ public class Car {
     public void setElectric(boolean electric) {
         isElectric = electric;
     }
+
+    @Override
+    public String toString() {
+        return "Car{" +
+                "id=" + id +
+                ", regNumber='" + regNumber + '\'' +
+                ", rentalPricePerDay=" + rentalPricePerDay +
+                ", brand=" + brand +
+                ", isElectric=" + isElectric +
+                '}';
+    }
 }
