@@ -2,6 +2,7 @@ import com.dragan.booking.CarBooking;
 import com.dragan.booking.CarBookingService;
 import com.dragan.car.Car;
 import com.dragan.car.CarService;
+import com.dragan.exceptions.EntityNotFoundException;
 import com.dragan.user.User;
 import com.dragan.user.UserService;
 
@@ -29,12 +30,12 @@ void main() {
             option = scanner.nextInt();
             scanner.nextLine();
             switch (option) {
-                case 1 -> System.out.println("Option 1 wurde gewählt.");
+                case 1 -> System.out.println(bookCar(carBookingService, userService, scanner));
                 case 2 -> System.out.println("Option 2 wurde gewählt.");
                 case 3 -> printAllUserBookedCars(carBookingService, scanner);
                 case 4 -> System.out.println(Arrays.toString(carBookingService.findAll()));
                 case 5 -> printCars(carBookingService.getAvailableCars());
-                case 6 -> System.out.println("Option 6");
+                case 6 -> printCars(carBookingService.availableElectricCars());
                 case 7 -> printAllUsers(userService);
                 case 8 -> isRunning = false;
                 default -> System.out.println("Input invalid, pleas try again or exit!");
@@ -92,5 +93,34 @@ public void printCars(Car[] cars) {
 
     for (Car car : cars) {
         System.out.println(car);
+    }
+}
+
+public UUID validateUUID(Scanner scanenr, String prompt) {
+    while (true) {
+        try {
+            System.out.println(prompt);
+            return UUID.fromString(scanenr.nextLine());
+        } catch (IllegalArgumentException e) {
+            System.out.print("UUID invalid, pleas try again!");
+        }
+    }
+}
+
+public CarBooking bookCar(CarBookingService carBookingService, UserService userService, Scanner scanner) {
+    System.out.println("AvailableCars: ");
+    printCars(carBookingService.getAvailableCars());
+    System.out.println();
+    System.out.println("Users: ");
+    printAllUsers(userService);
+    while (true) {
+        UUID carUUID = validateUUID(scanner, "Enter car UUID: ");
+        UUID userUUID = validateUUID(scanner, "Enter user UUID: ");
+        try {
+             return carBookingService.bookCar(userUUID, carUUID);
+
+        } catch (IllegalArgumentException | IllegalStateException | EntityNotFoundException e) {
+            System.out.println(e);
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.dragan.car;
 
+import com.dragan.booking.CarBooking;
 import com.dragan.exceptions.EntityNotFoundException;
 
 import java.math.BigDecimal;
@@ -30,4 +31,6 @@ public class CarDao {
         }
         throw new EntityNotFoundException("Car", uuid);
     }
+
+
 }
