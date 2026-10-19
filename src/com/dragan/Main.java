@@ -8,12 +8,11 @@ import com.dragan.user.UserService;
 
 void main() {
     UserService userService = new UserService();
-    CarService carService = new CarService();
     CarBookingService carBookingService = new CarBookingService();
 
     boolean isRunning = true;
     Scanner scanner = new Scanner(System.in);
-    int option = 0;
+    int option;
     while (isRunning) {
         System.out.println("""
                 
@@ -31,7 +30,7 @@ void main() {
             scanner.nextLine();
             switch (option) {
                 case 1 -> System.out.println(bookCar(carBookingService, userService, scanner));
-                case 2 -> System.out.println("Option 2 wurde gewählt.");
+                case 2 -> handleDeleteById(scanner, carBookingService);
                 case 3 -> printAllUserBookedCars(carBookingService, scanner);
                 case 4 -> System.out.println(Arrays.toString(carBookingService.findAll()));
                 case 5 -> printCars(carBookingService.getAvailableCars());
@@ -122,5 +121,24 @@ public CarBooking bookCar(CarBookingService carBookingService, UserService userS
         } catch (IllegalArgumentException | IllegalStateException | EntityNotFoundException e) {
             System.out.println(e);
         }
+    }
+}
+
+public void printBookings(CarBooking[] bookings) {
+    for (CarBooking booking : bookings) {
+        if (booking != null) {
+            System.out.println(booking);
+        }
+    }
+}
+
+public void handleDeleteById(Scanner scanner, CarBookingService carBookingService) {
+    printBookings(carBookingService.findAll());
+    UUID bookingUUID = validateUUID(scanner, "Enter booking UUID");
+    try {
+        carBookingService.deleteById(bookingUUID);
+        System.out.println("Booking deleted.");    }
+    catch (EntityNotFoundException e) {
+        System.out.println(e);
     }
 }

@@ -12,14 +12,6 @@ public class CarBookingDao {
         return carBookings;
     }
 
-    public CarBooking findById(UUID uuid) throws EntityNotFoundException {
-        for (CarBooking booking : carBookings) {
-            if (booking != null && Objects.equals(uuid, booking.getId())) {
-                return booking;
-            }
-        }
-        throw new EntityNotFoundException("CarBooking", uuid);
-    }
 
     public CarBooking[] findAllBookingsByUserId(UUID userUUID) {
         int count = 0;
@@ -50,6 +42,31 @@ public class CarBookingDao {
         extendedArray[arrayLength - 1] = booking;
         carBookings = extendedArray;
         return booking;
+    }
+
+    public void deleteByID(UUID uuid) {
+        int indexToRemove = -1;
+
+        for (int i = 0; i < carBookings.length; i++) {
+            if (Objects.equals(uuid, carBookings[i].getId())) {
+                indexToRemove = i;
+                break;
+            }
+        }
+
+        if (indexToRemove == -1) {
+            throw new EntityNotFoundException("Booking", uuid);
+        }
+
+        CarBooking[] updatedBookings = new CarBooking[carBookings.length - 1];
+        int newIndex = 0;
+        for (int i = 0; i < carBookings.length; i++) {
+            if (i != indexToRemove) {
+                updatedBookings[newIndex] = carBookings[i];
+                newIndex++;
+            }
+        }
+        carBookings = updatedBookings;
     }
 
 }

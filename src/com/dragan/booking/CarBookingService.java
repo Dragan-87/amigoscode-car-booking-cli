@@ -22,9 +22,7 @@ public class CarBookingService {
         return carBookingDao.findAll();
     }
 
-    public CarBooking[] findAllByUserID(UUID uuid) {
-        return carBookingDao.findAllBookingsByUserId(uuid);
-    }
+
 
     public boolean isCarBooked(Car car) {
         CarBooking[] carBookings = findAll();
@@ -91,5 +89,9 @@ public class CarBookingService {
                 LocalDateTime.now()
         );
         return save(booking);
+    }
+
+    public void deleteById(UUID uuid) {
+        carBookingDao.deleteByID(uuid);
     }
 }
