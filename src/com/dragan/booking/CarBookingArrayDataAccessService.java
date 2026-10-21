@@ -38,12 +38,11 @@ public class CarBookingArrayDataAccessService implements CarBookingDao {
     }
 
     @Override
-    public CarBooking save(CarBooking booking) {
+    public void save(CarBooking booking) {
         int arrayLength = carBookings.length + 1;
         CarBooking[] extendedArray = new CarBooking[arrayLength];
         extendedArray[arrayLength - 1] = booking;
         carBookings = extendedArray;
-        return booking;
     }
 
     @Override

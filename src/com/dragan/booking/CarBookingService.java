@@ -10,9 +10,16 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class CarBookingService {
-    private final CarBookingArrayDataAccessService carBookingDao = new CarBookingArrayDataAccessService();
-    private final CarService carService = new CarService();
-    private final UserService userService = new UserService();
+    private final CarBookingDao carBookingDao;
+    private final CarService carService;
+    private final UserService userService;
+
+    public CarBookingService(CarBookingDao carBookingDao, CarService carService, UserService userService) {
+        this.carBookingDao = carBookingDao;
+        this.carService = carService;
+        this.userService = userService;
+
+    }
 
     public CarBooking[] findAllBookingsByUserId(UUID uuid) {
         return carBookingDao.findAllBookingsByUserId(uuid);
@@ -21,8 +28,6 @@ public class CarBookingService {
     public CarBooking[] findAll() {
         return carBookingDao.findAll();
     }
-
-
 
     public boolean isCarBooked(Car car) {
         CarBooking[] carBookings = findAll();
@@ -72,11 +77,11 @@ public class CarBookingService {
         return availableElectricCars;
     }
 
-    public CarBooking save(CarBooking booking) {
-        return carBookingDao.save(booking);
+    public void save(CarBooking booking) {
+        carBookingDao.save(booking);
     }
 
-    public CarBooking bookCar(UUID userUUID, UUID carUUID) {
+    public void bookCar(UUID userUUID, UUID carUUID) {
         Car car = carService.findCarById(carUUID);
         User user = userService.findByID(userUUID);
         CarBooking booking = new CarBooking(
@@ -88,7 +93,7 @@ public class CarBookingService {
                 car.getRentalPricePerDay(),
                 LocalDateTime.now()
         );
-        return save(booking);
+        save(booking);
     }
 
     public void deleteById(UUID uuid) {
