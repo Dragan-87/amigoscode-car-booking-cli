@@ -34,8 +34,8 @@ void main() {
                 case 2 -> handleDeleteById(scanner, carBookingService);
                 case 3 -> printAllUserBookedCars(carBookingService, scanner);
                 case 4 -> System.out.println(Arrays.toString(carBookingService.findAll()));
-                case 5 -> printCars(carBookingService.getAvailableCars());
-                case 6 -> printCars(carBookingService.availableElectricCars());
+                case 5 -> printCars(carBookingService.getAvailableCars(car -> true));
+                case 6 -> printCars(carBookingService.getAvailableCars(car -> car.isElectric()));
                 case 7 -> printAllUsers(userService);
                 case 8 -> isRunning = false;
                 default -> System.out.println("Input invalid, pleas try again or exit!");
@@ -109,7 +109,7 @@ public UUID validateUUID(Scanner scanenr, String prompt) {
 
 public void bookCar(CarBookingService carBookingService, UserService userService, Scanner scanner) {
     System.out.println("AvailableCars: ");
-    printCars(carBookingService.getAvailableCars());
+    printCars(carBookingService.getAvailableCars(car -> true));
     System.out.println();
     System.out.println("Users: ");
     printAllUsers(userService);
