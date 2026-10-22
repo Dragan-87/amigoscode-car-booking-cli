@@ -44,14 +44,16 @@ public class CarBookingService {
         Car[] cars = carService.findAllCars();
         int counter = 0;
         for (Car car : cars) {
-            if (isCarBooked(car) && filter.test(car)) {
+            if (!isCarBooked(car) && filter.test(car)) {
                 counter++;
             }
         }
+
         Car[] availableCars = new Car[counter];
         int availableCarsIndex = 0;
+
         for (Car car : cars) {
-            if (!isCarBooked(car)) {
+            if (!isCarBooked(car) && filter.test(car)) {
                 availableCars[availableCarsIndex] = car;
                 availableCarsIndex++;
             }

@@ -84,7 +84,13 @@ public class CarBookingFileDataAccessService implements CarBookingDao {
 
     @Override
     public CarBooking[] findAllBookingsByUserId(UUID userUUID) {
-        return new CarBooking[0];
+        CarBooking[] bookings = readAll();
+        for (CarBooking booking : bookings) {
+            if (Objects.equals(userUUID, booking.getId())) {
+                return bookings;
+            }
+        }
+        throw new EntityNotFoundException("User", userUUID);
     }
 
 
