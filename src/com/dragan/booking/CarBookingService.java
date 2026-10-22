@@ -6,6 +6,8 @@ import com.dragan.user.UserService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Predicate;
@@ -22,16 +24,16 @@ public class CarBookingService {
 
     }
 
-    public CarBooking[] findAllBookingsByUserId(UUID uuid) {
+    public List<CarBooking> findAllBookingsByUserId(UUID uuid) {
         return carBookingDao.findAllBookingsByUserId(uuid);
     }
 
-    public CarBooking[] findAll() {
+    public List<CarBooking> findAll() {
         return carBookingDao.findAll();
     }
 
     public boolean isCarBooked(Car car) {
-        CarBooking[] carBookings = findAll();
+        List<CarBooking> carBookings = findAll();
         for (CarBooking carBooking : carBookings) {
             if (carBooking != null && Objects.equals(car.getId(), carBooking.getCar().getId())) {
                 return true;
@@ -40,22 +42,12 @@ public class CarBookingService {
         return false;
     }
 
-    public Car[] getAvailableCars(Predicate<Car> filter) {
-        Car[] cars = carService.findAllCars();
-        int counter = 0;
+    public List<Car> getAvailableCars(Predicate<Car> filter) {
+        List<Car> cars = carService.findAllCars();
+        List<Car> availableCars = new ArrayList<>();
         for (Car car : cars) {
             if (!isCarBooked(car) && filter.test(car)) {
-                counter++;
-            }
-        }
-
-        Car[] availableCars = new Car[counter];
-        int availableCarsIndex = 0;
-
-        for (Car car : cars) {
-            if (!isCarBooked(car) && filter.test(car)) {
-                availableCars[availableCarsIndex] = car;
-                availableCarsIndex++;
+                availableCars.add(car);
             }
         }
         return availableCars;

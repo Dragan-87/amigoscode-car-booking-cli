@@ -2,34 +2,25 @@ package com.dragan.booking;
 
 import com.dragan.exceptions.EntityNotFoundException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
 public class CarBookingArrayDataAccessService implements CarBookingDao {
-    private CarBooking[] carBookings = new CarBooking[0];
+    private final List<CarBooking> carBookings = new ArrayList<>();
 
-    public CarBooking[] findAll() {
+    public List<CarBooking> findAll() {
         return carBookings;
     }
 
 
     @Override
-    public CarBooking[] findAllBookingsByUserId(UUID userUUID) {
-        int count = 0;
-
-        for (CarBooking booking : carBookings) {
-            if (booking != null && Objects.equals(userUUID, booking.getUser().getId())) {
-                count++;
-            }
-        }
-
-        CarBooking[] userBookings = new CarBooking[count];
-        int index = 0;
-
-        for (CarBooking booking : carBookings) {
-            if (booking != null && Objects.equals(userUUID, booking.getUser().getId())) {
-                userBookings[index] = booking;
-                index++;
+    public List<CarBooking> findAllBookingsByUserId(UUID userUUID) {
+        List<CarBooking> userBookings = new ArrayList<>();
+        for (CarBooking carBooking : carBookings) {
+            if (Objects.equals(carBooking.getId(), userUUID)) {
+                userBookings.add(carBooking);
             }
         }
 
@@ -39,36 +30,14 @@ public class CarBookingArrayDataAccessService implements CarBookingDao {
 
     @Override
     public void save(CarBooking booking) {
-        int arrayLength = carBookings.length + 1;
-        CarBooking[] extendedArray = new CarBooking[arrayLength];
-        extendedArray[arrayLength - 1] = booking;
-        carBookings = extendedArray;
+        carBookings.add(booking);
     }
 
     @Override
     public void deleteByID(UUID uuid) {
-        int indexToRemove = -1;
-
-        for (int i = 0; i < carBookings.length; i++) {
-            if (Objects.equals(uuid, carBookings[i].getId())) {
-                indexToRemove = i;
-                break;
-            }
-        }
-
-        if (indexToRemove == -1) {
+        if (!carBookings.removeIf(booking -> Objects.equals(booking.getId(), uuid))) {
             throw new EntityNotFoundException("Booking", uuid);
         }
-
-        CarBooking[] updatedBookings = new CarBooking[carBookings.length - 1];
-        int newIndex = 0;
-        for (int i = 0; i < carBookings.length; i++) {
-            if (i != indexToRemove) {
-                updatedBookings[newIndex] = carBookings[i];
-                newIndex++;
-            }
-        }
-        carBookings = updatedBookings;
     }
 
 }

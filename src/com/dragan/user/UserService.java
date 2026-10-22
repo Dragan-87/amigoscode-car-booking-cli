@@ -1,11 +1,12 @@
 package com.dragan.user;
 
+import java.util.List;
 import java.util.UUID;
 
 public class UserService {
     private final UserArrayDataAccessService userArrayDataAccessService = new UserArrayDataAccessService() ;
 
-    public User[] findAll() {
+    public List<User> findAll() {
         return userArrayDataAccessService.findAll();
     }
 

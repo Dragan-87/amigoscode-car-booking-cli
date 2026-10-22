@@ -1,11 +1,12 @@
 package com.dragan.car;
 
+import java.util.List;
 import java.util.UUID;
 
 public class CarService {
     private final CarArrayDataAccessService carDao = new CarArrayDataAccessService();
 
-    public Car[] findAllCars() {
+    public List<Car> findAllCars() {
         return carDao.findAll();
     }
 
