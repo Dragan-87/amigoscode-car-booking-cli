@@ -125,8 +125,8 @@ public CarBooking bookCar(CarBookingService carBookingService, UserService userS
     while (true) {
         UUID carUUID = validateUUID(scanner, "Enter car UUID: ");
         UUID userUUID = validateUUID(scanner, "Enter user UUID: ");
-        LocalDate startDate = validateDate(scanner, "Enter starting date.");
-        LocalDate endDate = validateDate(scanner, "Enter end date.");
+        LocalDate startDate = validateDate(scanner, "Enter starting date. Fromat yyyy-mm-dd:");
+        LocalDate endDate = validateDate(scanner, "Enter end date. Fromat yyyy-mm-dd:");
         try {
              return carBookingService.bookCar(userUUID, carUUID, startDate, endDate);
 
