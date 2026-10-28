@@ -40,10 +40,12 @@ public class CarBookingService {
         return false;
     }
 
+    public Car[] getAvailableCars() {
     public Car[] getAvailableCars(Predicate<Car> filter) {
         Car[] cars = carService.findAllCars();
         int counter = 0;
         for (Car car : cars) {
+            if (!isCarBooked(car)) {
             if (!isCarBooked(car) && filter.test(car)) {
                 counter++;
             }
