@@ -2,6 +2,7 @@ package com.dragan.booking;
 
 import com.dragan.exceptions.EntityNotFoundException;
 
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -38,8 +39,8 @@ public class CarBookingDao {
 
     public CarBooking save(CarBooking booking) {
         int arrayLength = carBookings.length + 1;
-        CarBooking[] extendedArray = new CarBooking[arrayLength];
-        extendedArray[arrayLength - 1] = booking;
+        CarBooking[] extendedArray = Arrays.copyOf(carBookings, arrayLength);
+        extendedArray[extendedArray.length - 1] = booking;
         carBookings = extendedArray;
         return booking;
     }
@@ -48,7 +49,7 @@ public class CarBookingDao {
         int indexToRemove = -1;
 
         for (int i = 0; i < carBookings.length; i++) {
-            if (Objects.equals(uuid, carBookings[i].getId())) {
+            if (carBookings[i] != null && Objects.equals(uuid, carBookings[i].getId())) {
                 indexToRemove = i;
                 break;
             }

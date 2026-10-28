@@ -98,9 +98,20 @@ public UUID validateUUID(Scanner scanenr, String prompt) {
     while (true) {
         try {
             System.out.println(prompt);
-            return UUID.fromString(scanenr.nextLine());
+            return UUID.fromString(scanenr.nextLine().trim());
         } catch (IllegalArgumentException e) {
-            System.out.print("UUID invalid, pleas try again!");
+            System.out.print("UUID invalid, please try again!");
+        }
+    }
+}
+
+public LocalDate validateDate(Scanner scanner, String prompt) {
+    while (true) {
+        try {
+            System.out.println(prompt);
+            return LocalDate.parse(scanner.nextLine().trim());
+        } catch (DateTimeParseException e) {
+            System.out.println("Date invalid, please try again!");
         }
     }
 }
@@ -114,8 +125,10 @@ public CarBooking bookCar(CarBookingService carBookingService, UserService userS
     while (true) {
         UUID carUUID = validateUUID(scanner, "Enter car UUID: ");
         UUID userUUID = validateUUID(scanner, "Enter user UUID: ");
+        LocalDate startDate = validateDate(scanner, "Enter starting date.");
+        LocalDate endDate = validateDate(scanner, "Enter end date.");
         try {
-             return carBookingService.bookCar(userUUID, carUUID);
+             return carBookingService.bookCar(userUUID, carUUID, startDate, endDate);
 
         } catch (IllegalArgumentException | IllegalStateException | EntityNotFoundException e) {
             System.out.println(e);

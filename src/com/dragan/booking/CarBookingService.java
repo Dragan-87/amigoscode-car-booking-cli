@@ -4,8 +4,11 @@ import com.dragan.car.CarService;
 import com.dragan.user.User;
 import com.dragan.user.UserService;
 
+import java.awt.*;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -21,8 +24,6 @@ public class CarBookingService {
     public CarBooking[] findAll() {
         return carBookingDao.findAll();
     }
-
-
 
     public boolean isCarBooked(Car car) {
         CarBooking[] carBookings = findAll();
@@ -76,19 +77,32 @@ public class CarBookingService {
         return carBookingDao.save(booking);
     }
 
-    public CarBooking bookCar(UUID userUUID, UUID carUUID) {
+    public CarBooking bookCar(UUID userUUID, UUID carUUID, LocalDate startDate, LocalDate endDate) {
         Car car = carService.findCarById(carUUID);
+        if (isCarBooked(car)) {
+            throw new IllegalStateException("Car already booked");
+        }
+        if (startDate.isAfter(endDate)) {
+            throw new IllegalArgumentException("End date must not be before start date");
+        }
+        long rentalDays = calculateRentalDays(startDate, endDate);
+        BigDecimal price = car.getRentalPricePerDay().multiply(BigDecimal.valueOf(rentalDays));
         User user = userService.findByID(userUUID);
         CarBooking booking = new CarBooking(
                 UUID.randomUUID(),
                 user,
                 car,
-                LocalDate.now(),
-                LocalDate.now(),
-                car.getRentalPricePerDay(),
+                startDate,
+                endDate,
+                price,
                 LocalDateTime.now()
         );
         return save(booking);
+    }
+
+    private long calculateRentalDays(LocalDate startDate, LocalDate endDate) {
+        long daysBetween = ChronoUnit.DAYS.between(startDate, endDate);
+        return Math.max(1, daysBetween);
     }
 
     public void deleteById(UUID uuid) {
