@@ -3,7 +3,11 @@ package com.dragan.car;
 import java.util.UUID;
 
 public class CarService {
-    private final CarArrayDataAccessService carDao = new CarArrayDataAccessService();
+    private final CarDao carDao;
+
+    public CarService(CarDao carDao) {
+        this.carDao = carDao;
+    }
 
     public Car[] findAllCars() {
         return carDao.findAll();

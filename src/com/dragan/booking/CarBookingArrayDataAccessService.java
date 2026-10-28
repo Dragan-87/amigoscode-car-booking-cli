@@ -2,6 +2,7 @@ package com.dragan.booking;
 
 import com.dragan.exceptions.EntityNotFoundException;
 
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -39,9 +40,8 @@ public class CarBookingArrayDataAccessService implements CarBookingDao {
 
     @Override
     public void save(CarBooking booking) {
-        int arrayLength = carBookings.length + 1;
-        CarBooking[] extendedArray = new CarBooking[arrayLength];
-        extendedArray[arrayLength - 1] = booking;
+        CarBooking[] extendedArray = Arrays.copyOf(carBookings, carBookings.length + 1);
+        extendedArray[extendedArray.length - 1] = booking;
         carBookings = extendedArray;
     }
 

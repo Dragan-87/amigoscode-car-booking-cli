@@ -3,13 +3,17 @@ package com.dragan.user;
 import java.util.UUID;
 
 public class UserService {
-    private final UserArrayDataAccessService userArrayDataAccessService = new UserArrayDataAccessService() ;
+    private final UserDao userDao;
+
+    public UserService(UserDao userDao) {
+        this.userDao = userDao;
+    }
 
     public User[] findAll() {
-        return userArrayDataAccessService.findAll();
+        return userDao.findAll();
     }
 
     public User findByID(UUID uuid) {
-        return userArrayDataAccessService.findByID(uuid);
+        return userDao.findByID(uuid);
     }
 }

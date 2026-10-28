@@ -1,14 +1,20 @@
 import com.dragan.booking.*;
 import com.dragan.car.Car;
+import com.dragan.car.CarDao;
+import com.dragan.car.CarFileDataAccessService;
 import com.dragan.car.CarService;
 import com.dragan.exceptions.EntityNotFoundException;
 import com.dragan.user.User;
+import com.dragan.user.UserDao;
+import com.dragan.user.UserFileDataAccessService;
 import com.dragan.user.UserService;
 
 void main() {
-    UserService userService = new UserService();
+    UserDao userDao = new UserFileDataAccessService("users.dat");
+    UserService userService = new UserService(userDao);
+    CarDao carDao = new CarFileDataAccessService("cars.dat");
+    CarService carService = new CarService(carDao);
     CarBookingDao carBookingDao = new CarBookingFileDataAccessService("booking.dat");
-    CarService carService = new CarService();
     CarBookingService carBookingService = new CarBookingService(carBookingDao, carService, userService);
 
     boolean isRunning = true;
@@ -107,6 +113,21 @@ public UUID validateUUID(Scanner scanenr, String prompt) {
     }
 }
 
+// "uuuu" + STRICT rejects dates that don't exist, e.g. 31.02.2026
+private static final DateTimeFormatter DATE_FORMAT =
+        DateTimeFormatter.ofPattern("dd.MM.uuuu").withResolverStyle(ResolverStyle.STRICT);
+
+public LocalDate validateLocalDate(Scanner scanner, String prompt) {
+    while (true) {
+        try {
+            System.out.println(prompt);
+            return LocalDate.parse(scanner.nextLine(), DATE_FORMAT);
+        } catch (DateTimeParseException e) {
+            System.out.println("Date invalid, please use the format dd.MM.yyyy!");
+        }
+    }
+}
+
 public void bookCar(CarBookingService carBookingService, UserService userService, Scanner scanner) {
     System.out.println("AvailableCars: ");
     printCars(carBookingService.getAvailableCars(car -> true));
@@ -116,8 +137,11 @@ public void bookCar(CarBookingService carBookingService, UserService userService
     while (true) {
         UUID carUUID = validateUUID(scanner, "Enter car UUID: ");
         UUID userUUID = validateUUID(scanner, "Enter user UUID: ");
+        LocalDate startDate = validateLocalDate(scanner, "Enter start date (dd.MM.yyyy): ");
+        LocalDate endDate = validateLocalDate(scanner, "Enter end date (dd.MM.yyyy): ");
         try {
-             carBookingService.bookCar(userUUID, carUUID);
+             carBookingService.bookCar(userUUID, carUUID, startDate, endDate);
+             System.out.println("Car booked.");
              break;
 
         } catch (IllegalArgumentException | IllegalStateException | EntityNotFoundException e) {
