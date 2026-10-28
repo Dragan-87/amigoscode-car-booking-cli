@@ -25,7 +25,7 @@ public class CarBookingFileDataAccessService implements CarBookingDao {
         ) {
             return (CarBooking[]) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException("Can't read bookings: " + filePath , e);
+            throw new RuntimeException("Can't read bookings: " + filePath, e);
         }
     }
 
@@ -36,7 +36,7 @@ public class CarBookingFileDataAccessService implements CarBookingDao {
         ) {
             oos.writeObject(bookings);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write in file " + filePath ,e);
+            throw new RuntimeException("Can't write in file " + filePath, e);
         }
     }
 
@@ -86,7 +86,7 @@ public class CarBookingFileDataAccessService implements CarBookingDao {
     public CarBooking[] findAllBookingsByUserId(UUID userUUID) {
         CarBooking[] bookings = readAll();
         for (CarBooking booking : bookings) {
-            if (Objects.equals(userUUID, booking.getId())) {
+            if (Objects.equals(userUUID, booking.getUser().getId())) {
                 return bookings;
             }
         }

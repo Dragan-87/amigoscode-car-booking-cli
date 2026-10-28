@@ -7,7 +7,7 @@ import com.dragan.user.UserService;
 
 void main() {
     UserService userService = new UserService();
-    CarBookingDao carBookingDao = new CarBookingArrayDataAccessService();
+    CarBookingDao carBookingDao = new CarBookingFileDataAccessService("booking.dat");
     CarService carService = new CarService();
     CarBookingService carBookingService = new CarBookingService(carBookingDao, carService, userService);
 
