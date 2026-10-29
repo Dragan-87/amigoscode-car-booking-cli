@@ -113,7 +113,6 @@ public UUID validateUUID(Scanner scanenr, String prompt) {
     }
 }
 
-// "uuuu" + STRICT rejects dates that don't exist, e.g. 31.02.2026
 private static final DateTimeFormatter DATE_FORMAT =
         DateTimeFormatter.ofPattern("dd.MM.uuuu").withResolverStyle(ResolverStyle.STRICT);
 

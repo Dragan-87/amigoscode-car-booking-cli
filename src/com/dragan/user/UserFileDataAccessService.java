@@ -22,7 +22,6 @@ public class UserFileDataAccessService implements UserDao {
     private User[] readAll() {
         File file = new File(filePath);
         if (!file.exists()) {
-            // first start: create the file with the default users
             writeAll(DEFAULT_USERS);
             return DEFAULT_USERS;
         }
