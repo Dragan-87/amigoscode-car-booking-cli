@@ -1,5 +1,6 @@
 package com.dragan.user;
 
+import java.util.List;
 import java.util.UUID;
 
 public class UserService {
@@ -9,7 +10,7 @@ public class UserService {
         this.userDao = userDao;
     }
 
-    public User[] findAll() {
+    public List<User> findAll() {
         return userDao.findAll();
     }
 

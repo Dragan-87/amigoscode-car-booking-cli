@@ -3,33 +3,31 @@ package com.dragan.booking;
 import com.dragan.exceptions.EntityNotFoundException;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 public class CarBookingFileDataAccessService implements CarBookingDao {
 
-    String filePath;
+    private final String filePath;
 
     public CarBookingFileDataAccessService(String filePath) {
         this.filePath = filePath;
     }
 
-    private CarBooking[] readAll() {
+    private List<CarBooking> readAll() {
         File file = new File(filePath);
-        if (!file.exists()) {
-            return new CarBooking[0];
+        if (file.length() == 0 || !file.exists()) {
+            return new ArrayList<>();
         }
         try(FileInputStream fis = new FileInputStream(file);
             ObjectInputStream ois = new ObjectInputStream(fis)
         ) {
-            return (CarBooking[]) ois.readObject();
+            return (List<CarBooking>) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException("Can't read bookings: " + filePath, e);
         }
     }
 
-    private void writeAll(CarBooking[] bookings) {
+    private void writeAll(List<CarBooking> bookings) {
         try (
                 FileOutputStream fos = new FileOutputStream(filePath);
                 ObjectOutputStream oos = new ObjectOutputStream(fos)
@@ -43,61 +41,33 @@ public class CarBookingFileDataAccessService implements CarBookingDao {
 
     @Override
     public void save(CarBooking newBooking) {
-        CarBooking[] bookings = readAll();
-        CarBooking[] newBookings = Arrays.copyOf(bookings, bookings.length + 1);
-        newBookings[newBookings.length - 1] = newBooking;
-        writeAll(newBookings);
+        List<CarBooking> bookings = readAll();
+        bookings.add(newBooking);
+        writeAll(bookings);
     }
 
 
     @Override
     public void deleteByID(UUID uuid) {
-        CarBooking[] bookings = readAll();
-        int newArrayIndex = 0;
-        int deletingIndex = -1;
-        for (int i = 0; i < bookings.length; i++) {
-            if (Objects.equals(uuid, bookings[i].getId())) {
-                deletingIndex = i;
-                break;
-            }
-        }
-
-        if (deletingIndex < 0) {
+        List<CarBooking> bookings = readAll();
+        if (!bookings.removeIf(booking -> Objects.equals(uuid, booking.getId()))) {
             throw new EntityNotFoundException("Booking", uuid);
         }
-
-        CarBooking[] updatedBookings = new CarBooking[bookings.length - 1];
-        for (int i = 0; i < bookings.length; i++) {
-            if (i == deletingIndex) {
-                continue;
-            }
-            updatedBookings[newArrayIndex] = bookings[i];
-            newArrayIndex++;
-        }
-        writeAll(updatedBookings);
+        writeAll(bookings);
     }
 
     @Override
-    public CarBooking[] findAll() {
+    public List<CarBooking> findAll() {
         return readAll();
     }
 
     @Override
-    public CarBooking[] findAllBookingsByUserId(UUID userUUID) {
-        CarBooking[] bookings = readAll();
-        int count = 0;
+    public List<CarBooking> findAllBookingsByUserId(UUID userUUID) {
+        List<CarBooking> bookings = readAll();
+        List<CarBooking> userBookings = new ArrayList<>();
         for (CarBooking booking : bookings) {
-            if (Objects.equals(userUUID, booking.getUser().getId())) {
-                count++;
-            }
-        }
-
-        CarBooking[] userBookings = new CarBooking[count];
-        int index = 0;
-        for (CarBooking booking : bookings) {
-            if (Objects.equals(userUUID, booking.getUser().getId())) {
-                userBookings[index] = booking;
-                index++;
+            if (booking != null && Objects.equals(userUUID, booking.getUser().getId())) {
+                userBookings.add(booking);
             }
         }
         return userBookings;
