@@ -34,8 +34,7 @@ public class CarBookingService {
     }
 
     public boolean isCarBooked(Car car) {
-        List<CarBooking> carBookings = findAll();
-        return carBookings.stream().anyMatch(booking -> Objects.equals(car.getId(), booking.getCar().getId()));
+        return findAll().stream().anyMatch(booking -> Objects.equals(car.getId(), booking.getCar().getId()));
     }
 
     public List<Car> getAvailableCars(Predicate<Car> filter) {

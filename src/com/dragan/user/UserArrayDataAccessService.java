@@ -22,12 +22,7 @@ public class UserArrayDataAccessService implements UserDao {
     }
 
     @Override
-    public User findByID(UUID userUUID) {
-        for (User user : users) {
-            if (user != null && Objects.equals(userUUID, user.getId())) {
-                return user;
-            }
-        }
-        throw new EntityNotFoundException("User", userUUID);
+    public User findByID(UUID userUUID) throws EntityNotFoundException {
+        return users.stream().filter(user -> Objects.equals(userUUID, user.getId())).findFirst().orElseThrow(() -> new EntityNotFoundException("User", userUUID));
     }
 }
