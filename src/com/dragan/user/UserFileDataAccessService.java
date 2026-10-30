@@ -54,11 +54,6 @@ public class UserFileDataAccessService implements UserDao {
 
     @Override
     public User findByID(UUID userUUID) {
-        for (User user : readAll()) {
-            if (Objects.equals(userUUID, user.getId())) {
-                return user;
-            }
-        }
-        throw new EntityNotFoundException("User", userUUID);
+        return readAll().stream().filter(user -> Objects.equals(userUUID, user.getId())).findFirst().orElseThrow(() -> new EntityNotFoundException("User", userUUID));
     }
 }

@@ -56,11 +56,6 @@ public class CarFileDataAccessService implements CarDao {
 
     @Override
     public Car findById(UUID carUUID) {
-        for (Car car : readAll()) {
-            if (Objects.equals(carUUID, car.getId())) {
-                return car;
-            }
-        }
-        throw new EntityNotFoundException("Car", carUUID);
+        return readAll().stream().filter(car -> Objects.equals(carUUID, car.getId())).findFirst().orElseThrow(() -> new EntityNotFoundException("Car", carUUID));
     }
 }

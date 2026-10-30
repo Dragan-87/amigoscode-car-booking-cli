@@ -25,13 +25,8 @@ public class CarArrayDataAccessService implements CarDao {
     }
 
     @Override
-    public Car findById(UUID uuid) throws EntityNotFoundException {
-        for (Car car : cars) {
-            if (car != null && Objects.equals(uuid, car.getId())) {
-                return car;
-            }
-        }
-        throw new EntityNotFoundException("Car", uuid);
+    public Car findById(UUID carUUID) throws EntityNotFoundException {
+        return cars.stream().filter(car -> Objects.equals(carUUID, car.getId())).findFirst().orElseThrow(() -> new EntityNotFoundException("Car", carUUID));
     }
 
 
