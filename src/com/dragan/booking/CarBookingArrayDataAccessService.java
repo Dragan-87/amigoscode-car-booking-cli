@@ -1,12 +1,14 @@
 package com.dragan.booking;
 
+import com.dragan.exceptions.EntityNotFoundException;
+
 import java.util.*;
 
 public class CarBookingArrayDataAccessService implements CarBookingDao {
     private List<CarBooking> carBookings = new ArrayList<>();
 
     public List<CarBooking> findAll() {
-        return carBookings;
+        return new ArrayList<>(carBookings);
     }
 
 
@@ -30,7 +32,10 @@ public class CarBookingArrayDataAccessService implements CarBookingDao {
 
     @Override
     public void deleteByID(UUID uuid) {
-        carBookings.removeIf(booking -> booking != null && Objects.equals(uuid, booking.getId()));
+       if (!carBookings.removeIf(booking -> booking != null && Objects.equals(uuid, booking.getId()))){
+           throw new EntityNotFoundException("Booking", uuid);
+       }
+
     }
 
 }

@@ -55,7 +55,7 @@ void main() {
 
 public void printAllUsers(UserService userService) {
     List<User> users = userService.findAll();
-    if (users == null) {
+    if (users.isEmpty()) {
         System.out.println("No users found.");
         return;
     }

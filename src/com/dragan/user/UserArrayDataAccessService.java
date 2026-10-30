@@ -18,7 +18,7 @@ public class UserArrayDataAccessService implements UserDao {
 
     @Override
     public List<User> findAll() {
-        return users;
+        return new ArrayList<>(users);
     }
 
     @Override
