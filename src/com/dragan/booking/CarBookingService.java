@@ -8,7 +8,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -36,23 +35,12 @@ public class CarBookingService {
 
     public boolean isCarBooked(Car car) {
         List<CarBooking> carBookings = findAll();
-        for (CarBooking carBooking : carBookings) {
-            if (carBooking != null && Objects.equals(car.getId(), carBooking.getCar().getId())) {
-                return true;
-            }
-        }
-        return false;
+        return carBookings.stream().anyMatch(booking -> Objects.equals(car.getId(), booking.getCar().getId()));
     }
 
     public List<Car> getAvailableCars(Predicate<Car> filter) {
         List<Car> cars = carService.findAllCars();
-        List<Car> availableCars = new ArrayList<>();
-        for (Car car : cars) {
-            if (!isCarBooked(car) && filter.test(car)) {
-                availableCars.add(car);
-            }
-        }
-        return availableCars;
+        return cars.stream().filter(car -> !isCarBooked(car) && filter.test(car)).toList();
     }
 
     public void save(CarBooking booking) {

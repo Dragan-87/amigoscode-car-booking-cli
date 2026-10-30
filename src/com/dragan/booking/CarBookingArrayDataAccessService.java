@@ -14,15 +14,7 @@ public class CarBookingArrayDataAccessService implements CarBookingDao {
 
     @Override
     public List<CarBooking> findAllBookingsByUserId(UUID userUUID) {
-        List<CarBooking> userBookings = new ArrayList<>();
-        for (CarBooking booking : carBookings) {
-            if (booking != null && Objects.equals(userUUID, booking.getUser().getId())) {
-                userBookings.add(booking);
-            }
-        }
-
-        return userBookings;
-
+        return carBookings.stream().filter(booking -> Objects.equals(userUUID, booking.getUser().getId())).toList();
     }
 
     @Override
