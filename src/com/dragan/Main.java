@@ -39,7 +39,7 @@ void main() {
                 case 1 -> bookCar(carBookingService, userService, scanner);
                 case 2 -> handleDeleteById(scanner, carBookingService);
                 case 3 -> printAllUserBookedCars(carBookingService, scanner);
-                case 4 -> System.out.println(Arrays.toString(carBookingService.findAll()));
+                case 4 -> System.out.println(carBookingService.findAll());
                 case 5 -> printCars(carBookingService.getAvailableCars(car -> true));
                 case 6 -> printCars(carBookingService.getAvailableCars(car -> car.isElectric()));
                 case 7 -> printAllUsers(userService);
@@ -54,8 +54,8 @@ void main() {
 }
 
 public void printAllUsers(UserService userService) {
-    User[] users = userService.findAll();
-    if (users == null) {
+    List<User> users = userService.findAll();
+    if (users.isEmpty()) {
         System.out.println("No users found.");
         return;
     }
@@ -66,12 +66,12 @@ public void printAllUsers(UserService userService) {
 }
 
 public void printAllUserBookedCars(CarBookingService carBookingService, Scanner scanner) {
-    CarBooking[] carBookings = carBookingService.findAllBookingsByUserId(validateUserUuidInput(scanner));
-    if (carBookings == null || carBookings.length == 0) {
+    List<CarBooking> carBookings = carBookingService.findAllBookingsByUserId(validateUserUuidInput(scanner));
+    if (carBookings == null || carBookings.isEmpty()) {
         System.out.println("No bookings found.");
         return;
     }
-    System.out.println(carBookings.length);
+    System.out.println(carBookings.size());
     for (CarBooking booking : carBookings) {
         if (booking != null) {
             System.out.println(booking.getCar());
@@ -91,8 +91,8 @@ public UUID validateUserUuidInput(Scanner scanner) {
     }
 }
 
-public void printCars(Car[] cars) {
-    if (cars == null || cars.length == 0) {
+public void printCars(List<Car> cars) {
+    if (cars == null || cars.isEmpty()) {
         System.out.println("No cars found");
         return;
     }
@@ -113,7 +113,6 @@ public UUID validateUUID(Scanner scanenr, String prompt) {
     }
 }
 
-// "uuuu" + STRICT rejects dates that don't exist, e.g. 31.02.2026
 private static final DateTimeFormatter DATE_FORMAT =
         DateTimeFormatter.ofPattern("dd.MM.uuuu").withResolverStyle(ResolverStyle.STRICT);
 
@@ -150,7 +149,7 @@ public void bookCar(CarBookingService carBookingService, UserService userService
     }
 }
 
-public void printBookings(CarBooking[] bookings) {
+public void printBookings(List<CarBooking> bookings) {
     for (CarBooking booking : bookings) {
         if (booking != null) {
             System.out.println(booking);
