@@ -9,9 +9,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class CarBookingService {
     private final CarBookingDao carBookingDao;
@@ -33,13 +34,10 @@ public class CarBookingService {
         return carBookingDao.findAll();
     }
 
-    public boolean isCarBooked(Car car) {
-        return findAll().stream().anyMatch(booking -> Objects.equals(car.getId(), booking.getCar().getId()));
-    }
-
     public List<Car> getAvailableCars(Predicate<Car> filter) {
         List<Car> cars = carService.findAllCars();
-        return cars.stream().filter(car -> !isCarBooked(car) && filter.test(car)).toList();
+        Set<UUID> bookedCarIds = findAll().stream().map(booking -> booking.getCar().getId()).collect(Collectors.toSet());
+        return cars.stream().filter(car -> !bookedCarIds.contains(car.getId()) && filter.test(car)).toList();
     }
 
     public void save(CarBooking booking) {
