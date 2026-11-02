@@ -8,11 +8,11 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class CarBookingService {
     private final CarBookingDao carBookingDao;
@@ -34,25 +34,10 @@ public class CarBookingService {
         return carBookingDao.findAll();
     }
 
-    public boolean isCarBooked(Car car) {
-        List<CarBooking> carBookings = findAll();
-        for (CarBooking carBooking : carBookings) {
-            if (carBooking != null && Objects.equals(car.getId(), carBooking.getCar().getId())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public List<Car> getAvailableCars(Predicate<Car> filter) {
         List<Car> cars = carService.findAllCars();
-        List<Car> availableCars = new ArrayList<>();
-        for (Car car : cars) {
-            if (!isCarBooked(car) && filter.test(car)) {
-                availableCars.add(car);
-            }
-        }
-        return availableCars;
+        Set<UUID> bookedCarIds = findAll().stream().map(booking -> booking.getCar().getId()).collect(Collectors.toSet());
+        return cars.stream().filter(car -> !bookedCarIds.contains(car.getId()) && filter.test(car)).toList();
     }
 
     public void save(CarBooking booking) {
