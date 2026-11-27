@@ -30,3 +30,9 @@ bin/
 .DS_Store
 
 *.dat
+
+### Maven ###
+target/
+
+### IntelliJ ###
+.idea
